@@ -2,6 +2,7 @@ var jwt = require('jsonwebtoken');
 const models = require('../models');
 
 
+
 module.exports = {
 
     //generar el token
@@ -9,8 +10,10 @@ module.exports = {
 
         try{
             const token = jwt.sign({
-                id: user.id,
-                rol: user.rol,
+                id: id,
+                rol: rol,
+                // id:id,
+                // rol:rol
             }, 'mipalabrasecreta', {
                 expiresIn: 3600 //el numero es en segundos
             })

@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
 const servToken = require('../services/token');
 const usuario = require('../models/usuario');
@@ -7,26 +7,27 @@ module.exports = {
 
     list: async (req, res, next) => {
         try {
-            const re = await usuario.findAll()
-            res.status(200).json({ re })
+            const re = await Usuario.findAll()
+            res.status(200).json(re)
 
         } catch (error) {
-            res.status(500).json({ 'error': 'Oops paso algo' })
+            res.status(500).json({ 'error': 'Oops paso algo' + error})
             next(error)
+
         }
-
-
 
     },
 
     add: async (req, res, next) => {
         try {
 
-            const re = await User.create(req.body)
+           
+            req.body.password = bcrypt.hashSync(req.body.password, 10);//enciptamos la contraseña
+            const re = await Usuario.create(req.body)
             res.status(200).json(re)
 
         } catch (error) {
-            res.status(500).json({ 'error': 'Oops paso algo' })
+            res.status(500).json({ 'error': 'Oops paso algo agregando usuario' })
             next(error)
 
         }
@@ -39,11 +40,13 @@ module.exports = {
 
     login: async (req, res, next) => { //el ext es por si el programa se queda en algún error, no se pegue y pueda seguir avanzando
         try {
-            const user = await User.findOne({ where: { email: req.body.email } }) //consultar si el usuario existe find one es que encuentre uno, con que encuentre uno es suficiente
+            const user = await Usuario.findOne({ where: { email: req.body.email } }) //consultar si el usuario existe find one es que encuentre uno, con que encuentre uno es suficiente
             if (user) {//si el usuario existe
                 const contrasenhaValida = bcrypt.compareSync(req.body.password, user.password);
+                // const contrasenhaValida = user.password;
                 if (contrasenhaValida) {//si es password es valido creamos el token
-                    const token = servToken.encode(user.id, user.rol)
+                    
+                    const token = await servToken.encode(user.id, user.rol);
 
                     res.status(200).send({
                         auth: true,
@@ -60,7 +63,7 @@ module.exports = {
 
             }
         } catch (error) {
-            res.status(500).json({ 'error': 'Oops paso algo' })
+            res.status(500).json({ 'error': 'Oops paso algo malo'})
             next(error)
         }
     }
