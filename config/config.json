@@ -1,10 +1,11 @@
 {
     "development": {
-        "username": "root",
-        "password": null,
-        "database": "proyectof_s4",
-        "host": "127.0.0.1",
-        "dialect": "mysql"
+        "username": "HIV0SsUtXM",
+        "password": "stpERaA0en",
+        "database": "HIV0SsUtXM",
+        "host": "remotemysql.com",
+        "dialect": "mysql",
+        "port": "3306"
     },
     "test": {
         "dialect": "sqlite",
